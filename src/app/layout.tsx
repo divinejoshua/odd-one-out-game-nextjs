@@ -6,7 +6,12 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Odd One Out",
-  description: "Games night",
+  description: "This is an 12+ rated game",
+  openGraph: {
+    title: 'Odd One Out',
+    description: 'This is an 12+ rated game',
+    images : 'https://odd-one-out-game.vercel.app/meta.png'
+  },
 };
 
 export default function RootLayout({

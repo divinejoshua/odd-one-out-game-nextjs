@@ -15,7 +15,7 @@ export default function HomePage() {
           alt="OddOneOut"
           className="emoji-image"
         />
-        &nbsp;Welcome to Hot seat game&nbsp;
+        &nbsp;Welcome to Odd One Out game&nbsp;
         <Image
           src={eighteenImage}
           alt="OddOneOut"
