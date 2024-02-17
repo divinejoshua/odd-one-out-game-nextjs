@@ -2,32 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+main{
+  margin: auto;
+  max-width: 500px;
+  padding: 10px;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+header{
+  border-bottom: 1px solid rgba(239, 239, 239, 1);
+  padding: 15px 0px;
+  font-weight: 700;
+}
+.emoji-image{
+  width: 30px;
+  height: 30px;
+}
+.eighteen-image{
+  width: 25px;
+  height: 25px;
+}
+
+.show-delay {
+  animation: cssAnimation 0s 3s forwards;
+  opacity: 0;
+}
+
+@keyframes cssAnimation {
+  to   { opacity: 1; }
 }
