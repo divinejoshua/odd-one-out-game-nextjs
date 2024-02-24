@@ -24,8 +24,10 @@ export default function DisplayCard(props : any) {
   const gamesColletionRef = collection(firebase, 'games');
   const [gameAdmin, setgameAdmin] = useState<boolean>(false)
   const questionsColletionRef = collection(firebase, 'questions');
-  const [questionList, setquestionList] = useState([])
+  const [DisplayCardValue, setDisplayCardValue] = useState<any>({})
   const [questionListOrder, setquestionListOrder] = useState<any>([])
+  const [gameplayerDetails, setgameplayerDetails] = useState<any>()
+  const [mainKeyword, setmainKeyword] = useState<string>("")
 
   // The change question function
   const changeQuestion = (value: number) =>{
@@ -60,13 +62,6 @@ export default function DisplayCard(props : any) {
     }
   }
 
-  // Re order questionList by time created
-  const reorderQuestionListAccendingOrder = (questionList : any) =>{
-    questionList.sort((a : any , b : any) => a.createdAt - b.createdAt);
-    setquestionListOrder(questionList)
-  }
-
-
   // Count down Timer effect
   useEffect(() => {
     let timer : any
@@ -99,6 +94,7 @@ export default function DisplayCard(props : any) {
       // get admin user status
       if(!localStorage.getItem('playerDetails')) return
       let playerDetails = JSON.parse(localStorage.getItem('playerDetails') || "");
+      setgameplayerDetails(playerDetails)
       if(gameDetails.game_admin ===playerDetails.player_id){
         setgameAdmin(true);
       }
@@ -120,32 +116,41 @@ export default function DisplayCard(props : any) {
 
     // Get messages from database
     const getQuestionList = onSnapshot(queryClause, (querySnapshot) => {
-      const response : [] | any = [];
+      let response : any = {}
       querySnapshot.forEach((doc) => {
-        response.push(doc.data())
+        response = doc.data()
       });
-      setquestionList(response)
+      let messages = response.message
+      let oddPlayers = response.oddPlayers
+
+      if(oddPlayers){
+        let playerDetails = JSON.parse(localStorage.getItem('playerDetails') || "");
+        for (let i = 0; i < oddPlayers.length; i++) {
+          if(playerDetails.player_id == oddPlayers[i].player_id){
+            setmainKeyword(oddPlayers[i].oddItem)
+          } else {
+            setmainKeyword(messages[0])
+          }
+
+        }
+        console.log(oddPlayers[0].oddItem)
+
+      }
+
+
+      setDisplayCardValue(response)
     })
 
     return () => {
       getQuestionList
     }
-  }, [])
-
-  // Re order question list
-  useEffect(() => {
-    // Call the function and log the reordered list
-    reorderQuestionListAccendingOrder(questionList)
-    return () => {
-    }
-  }, [questionList])
+  }, [gameRoundId])
 
 
   return (
     <div className="pt-3 px-2">
       <div className="clear-both">
-        <p className="text-lg float-left">Questions</p>
-        <p className="text-lg float-right">Game code &nbsp;  - &nbsp; <b>{props.gameId}</b></p>
+        <p className="text-lg">Game code &nbsp;  - &nbsp; <b>{props.gameId}</b></p>
       </div>
       {/* Loader  */}
       {
@@ -157,46 +162,14 @@ export default function DisplayCard(props : any) {
       }
 
       {/* Question box */}
-      { countDownSeconds === 0 && questionList.length > 0 &&
+      { countDownSeconds === 0 && DisplayCardValue &&
         <div className="mt-10">
             <div className='message-card rounded shadow-sm border mt-5 py-10 px-7'>
                 <div className='message-body text-center text-xl text-gray-700'>
-                    <p>{questionListOrder[activeQuestion-1]?.message}</p>
+                  <p>{DisplayCardValue?.oddPlayers?.oddItem}</p>
+                  <p>{mainKeyword}</p>
                 </div>
             </div>
-
-            {/* Pagination  */}
-            <div className="mt-10 flex justify-between">
-              { gameAdmin ?
-                <button className='btn py-2 place-content-center bg-purple-500 text-white px-4 rounded-lg font-bold drop-shadow'
-                  onClick={() => changeQuestion(activeQuestion-1)}
-                  disabled={activeQuestion === 1}
-                  >
-                  Prev
-                </button> : <p></p>
-              }
-              <p className="text-center text-lg mt-2"> {activeQuestion}/{questionList.length}</p>
-
-              { gameAdmin ?
-                <button className='btn py-2 place-content-center bg-blue-500 text-white px-4 rounded-lg font-bold drop-shadow'
-                  onClick={() => changeQuestion(activeQuestion+1)}
-                  disabled={activeQuestion == questionList.length}
-                >
-                  Next
-                </button> : <p></p>
-              }
-            </div>
-
-            {/* Finish and send the user back to the question form  */}
-            { activeQuestion === questionList.length && gameAdmin &&
-              <center>
-                <button className='btn flex py-3 place-content-center mt-10 bg-blue-500 text-white px-12 rounded-full font-bold drop-shadow'
-                 onClick={() => finishQuestion()}
-                >
-                  Play again
-                </button>
-              </center>
-            }
 
         </div>
       }
@@ -205,15 +178,8 @@ export default function DisplayCard(props : any) {
      
         <div>
           <center>
-            <p className="mt-20 text-2xl">No Questions asked !</p>
-            {
-              countDownSeconds === 0 && questionList.length ===0 && gameAdmin &&
-                <button className='btn flex py-3 place-content-center mt-10 bg-blue-500 text-white px-12 rounded-full font-bold drop-shadow'
-                  onClick={() => finishQuestion()}
-                >
-                  Play again
-                </button>
-            }
+            <p className="mt-6">Your card will be displayed here</p>
+           
           </center>
         </div>
 
