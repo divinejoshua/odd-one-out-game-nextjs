@@ -36,6 +36,7 @@ export default function AdminForm(props : any) {
   const [gameState, setgameState] = useState<string>("")
   const [isPlayerAdmin, setisPlayerAdmin] = useState<boolean>(false)
   const [playerList, setplayerList] = useState<any>([])
+  const [gameAdminId, setgameAdminId] = useState<any>()
   // const [oddPlayers, setoddPlayers] = useState(['']);
 
 
@@ -89,16 +90,30 @@ export default function AdminForm(props : any) {
 
   //  Choose random players
    const chooseRandomPlayers = () =>{
-    let randomPlayerIndices = getRandomIndices(playerList.length, values.length-1)
+    let activeList : any = []
 
-   
+    for (let i = 0; i < playerList.length; i++) {
+      if(gameAdminId != playerList[i].player_id){
+        activeList.push(playerList[i])
+       } 
+    }
+
+    console.log(gameAdminId)
+    console.log(activeList)
+
+    let randomPlayerIndices = getRandomIndices(activeList.length, values.length-1)
+
     let oddPlayers : any = []
 
     for (let i = 0; i < randomPlayerIndices.length; i++) {
-      let oddPlayerId :any = {};
-      oddPlayerId.player_id = playerList[randomPlayerIndices[i]].player_id
-      oddPlayerId.oddItem = values[i+1]
-      oddPlayers.push(oddPlayerId)
+    
+        let oddPlayerId :any = {};
+      
+        oddPlayerId.player_id = activeList[randomPlayerIndices[i]].player_id
+        oddPlayerId.oddItem = values[i+1]
+        oddPlayers.push(oddPlayerId)
+
+
     }
 
     return oddPlayers
@@ -177,6 +192,32 @@ const newGameRound = () =>{
       getPlayerList
     }
   }, [])
+
+
+
+   // Check for current game state
+   useEffect(() => {
+    // Query Statement
+    const queryClause = query(
+      gamesColletionRef,
+      where('game_id', '==', gameId),
+    );
+
+    // Get messages from database
+    const getGameState = onSnapshot(queryClause, (querySnapshot) => {
+      let gameDetails : any = {}
+      querySnapshot.forEach((doc) => {
+          gameDetails = doc.data()
+      });
+
+      setgameAdminId(gameDetails.game_admin)
+    })
+
+    return () => {
+      getGameState
+    }
+  }, [])
+
 
   return (
     <div className="pt-3 px-2">

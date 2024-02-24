@@ -126,9 +126,14 @@ export default function DisplayCard(props : any) {
       if(oddPlayers){
         let playerDetails = JSON.parse(localStorage.getItem('playerDetails') || "");
         for (let i = 0; i < oddPlayers.length; i++) {
+          console.log(playerDetails.player_id)
+          console.log(oddPlayers[i].player_id)
           if(playerDetails.player_id == oddPlayers[i].player_id){
             setmainKeyword(oddPlayers[i].oddItem)
+            break
           } else {
+            console.log("low")
+
             setmainKeyword(messages[0])
           }
 
@@ -166,7 +171,6 @@ export default function DisplayCard(props : any) {
         <div className="mt-10">
             <div className='message-card rounded shadow-sm border mt-5 py-10 px-7'>
                 <div className='message-body text-center text-xl text-gray-700'>
-                  <p>{DisplayCardValue?.oddPlayers?.oddItem}</p>
                   <p>{mainKeyword}</p>
                 </div>
             </div>
