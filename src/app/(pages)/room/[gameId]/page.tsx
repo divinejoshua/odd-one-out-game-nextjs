@@ -125,7 +125,12 @@ export default function GamePage({ params } : any) {
       if(gameDetails.game_state){
         setgameState(GAME_STATE.GAME_SEND_QUESTIONS)
         // The URL format is /game/<gameID>/<gameRound>
-        router.push(`/game/${gameId}`);
+
+        if(isPlayerAdmin){
+          router.push(`/admin/${gameId}`);
+        } else {
+          router.push(`/game/${gameId}`);
+        }
       }
     })
 
