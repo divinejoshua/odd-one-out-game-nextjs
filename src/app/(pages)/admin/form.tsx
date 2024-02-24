@@ -85,7 +85,6 @@ export default function AdminForm(props : any) {
         console.log(error);
         setdisabledButton(false)
     }
-    
    }
 
   //  Choose random players
@@ -97,9 +96,6 @@ export default function AdminForm(props : any) {
         activeList.push(playerList[i])
        } 
     }
-
-    console.log(gameAdminId)
-    console.log(activeList)
 
     let randomPlayerIndices = getRandomIndices(activeList.length, values.length-1)
 

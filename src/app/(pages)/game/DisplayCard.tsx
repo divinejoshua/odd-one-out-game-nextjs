@@ -126,20 +126,14 @@ export default function DisplayCard(props : any) {
       if(oddPlayers){
         let playerDetails = JSON.parse(localStorage.getItem('playerDetails') || "");
         for (let i = 0; i < oddPlayers.length; i++) {
-          console.log(playerDetails.player_id)
-          console.log(oddPlayers[i].player_id)
           if(playerDetails.player_id == oddPlayers[i].player_id){
             setmainKeyword(oddPlayers[i].oddItem)
             break
           } else {
-            console.log("low")
-
             setmainKeyword(messages[0])
           }
 
         }
-        console.log(oddPlayers[0].oddItem)
-
       }
 
 
