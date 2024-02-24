@@ -32,6 +32,7 @@ export default function AdminForm(props : any) {
   const gamesColletionRef = collection(firebase, 'games');
   const questionsColletionRef = collection(firebase, 'questions');
   const [disabledButton, setdisabledButton] = useState<boolean>(false)
+  const [values, setValues] = useState(['']);
 
    // The send messge function
    const SendMessage = async () =>{
@@ -75,6 +76,27 @@ export default function AdminForm(props : any) {
     }
    }
 
+
+   const handleChange = (i : any, event : any) => {
+    const newValues = [...values];
+    newValues[i] = event.target.value;
+    setValues(newValues);
+};
+
+  const handleAdd = () => {
+      const newValues = [...values];
+      newValues.push('');
+      setValues(newValues);
+  };
+
+
+  const handleRemove = (i : any) => {
+    const newValues = [...values];
+    newValues.splice(i, 1);
+    setValues(newValues);
+};
+
+
    // Count down Timer effect
    useEffect(() => {
     if (countDownSeconds===0){
@@ -97,27 +119,41 @@ export default function AdminForm(props : any) {
           // Text box before the message is sent
           <div>
             <div className='message-body mt-5 text-gray-700'>
-              <textarea
-                onChange={e => setmessageBody(e.target.value)}
-                onClick={() => setisError(false)}
-                className='w-full border rounded p-3
-                  border-gray-300
-                  focus:outline-none
-                  focus:border-blue-500
-                  focus:ring-blue-500 focus:ring-1 focus:border-100 transition duration-0 hover:duration-150'
-                maxLength={maxLength} rows={3} autoFocus
-                placeholder="Ask a question...">
-              </textarea>
-              <p className='text-xs text-gray-500 mt-4 float-right'>{messageBody.length} / {maxLength}</p>
+
+            <div>
+                {values.map((value, idx) => (
+                  <>
+                      <input
+                          key={idx}
+                          type="text"
+                          value={value}
+                          className='w-full border rounded p-3 mt-3
+                            border-gray-300
+                            focus:outline-none
+                            focus:border-blue-500
+                            focus:ring-blue-500 focus:ring-1 focus:border-100 transition duration-0 hover:duration-150'
+                          onChange={e => handleChange(idx, e)}
+                      />
+                      <button onClick={() => handleRemove(idx)} className="mt-2 border border-gray-300 px-3 rounded">Remove</button>
+                  </>
+                ))}
+            </div>
+
             </div>
 
             <center>
+            <button
+                 className='btn flex place-content-center mt-10 bg-white-500 border-gray-300 border text-black px-20 py-3 rounded-full font-bold'
+                 onClick={handleAdd}>Add input
+            </button>
+
+
               <button
                 disabled={disabledButton}
                 className='btn flex place-content-center mt-10 bg-blue-500 text-white px-20 py-3 rounded-full font-bold drop-shadow'
                 onClick={()=> SendMessage() }
               >
-                Send message
+                Start game
               </button>
             </center>
           </div>
