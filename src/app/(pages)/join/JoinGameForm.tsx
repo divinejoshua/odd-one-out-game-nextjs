@@ -140,7 +140,7 @@ export default function JoinGameForm() {
       onChange={(e)=> setgameIdInput(e.target.value)}
       autoFocus={true}
       required
-      readOnly={isValidGameCode ? true : false}
+      // readOnly={isValidGameCode ? true : false}
       placeholder="Enter game code"
       onClick={() => setformErrorMessage("")}
       className="form-control text-lg mt-1 w-full py-3 px-3 tracking-widest rounded border border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-blue-500 focus:ring-1 focus:border-100 transition duration-0 hover:duration-150"
